@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.mllwf.lookfiletowps">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".FileListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <receiver android:name=".MyBroadCastReciver">
+            <intent-filter>
+                <action android:name="com.kingsoft.writer.back.key.down"/>
+                <action android:name="cn.wps.moffice.file.close"/>
+                <action android:name="com.kingsoft.writer.back.key.down"/>
+                <action android:name="com.kingsoft.writer.home.key.down"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
