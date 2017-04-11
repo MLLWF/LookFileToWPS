@@ -1,7 +1,10 @@
 package com.mllwf.lookfiletowps.fragment;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,8 +23,10 @@ import com.mllwf.lookfiletowps.WpsModel;
 import com.mllwf.lookfiletowps.adapter.FileFmAdapter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by ML on 2017/4/10.
@@ -79,9 +84,14 @@ public class FileListFm extends Fragment implements AdapterView.OnItemClickListe
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         File file = mFiles[position];
         if (file.isFile()) {
-            String filePath = file.getAbsolutePath();
-            openFile(filePath);
-            Toast.makeText(getActivity(), file.getName(), Toast.LENGTH_SHORT).show();
+            if (isAvilible(getContext(), "cn.wps.moffice_eng")) {
+                String filePath = file.getAbsolutePath();
+                openFile(filePath);
+                Toast.makeText(getActivity(), file.getName(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "请先安装WPS移动版", Toast.LENGTH_SHORT).show();
+            }
+
         } else {
             getFileList(file.getAbsolutePath());
         }
@@ -115,6 +125,19 @@ public class FileListFm extends Fragment implements AdapterView.OnItemClickListe
             return false;
         }
         return true;
+    }
+
+    private boolean isAvilible(Context context, String packageName) {
+        final PackageManager packageManager = context.getPackageManager(); //获取packagemanager
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);//获取所有已安装程序的包信息
+        List<String> pName = new ArrayList<String>();//用于存储所有已安装程序的包名//从pinfo中将包名字逐一取出，压入pName list中
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
+                String pn = pinfo.get(i).packageName;
+                pName.add(pn);
+            }
+        }
+        return pName.contains(packageName);//判断pName中是否有目标程序的包名，有TRUE，没有FALSE
     }
 
     public void backDo() {
